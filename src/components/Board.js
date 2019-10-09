@@ -19,6 +19,9 @@ class Board extends React.Component
   render() {
     const board = [];
 
+    console.log(this.props);
+
+
     for (var i = 0; i < boardSize; i++)
     {
       let row = [];
@@ -43,5 +46,7 @@ class Board extends React.Component
     );
   }
 }
+
+
 
 export default Board;
