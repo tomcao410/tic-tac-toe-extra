@@ -1,8 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-import logo from './logo.svg';
+import logo from '../logo.svg';
 import './Game.css';
-import Board from './components/Board';
+import Board from '../components/Board';
+import * as actionTypes from '../actions/actions';
 
 const boardSize = 20; // Board.js also contain this parameter
 
@@ -61,6 +63,7 @@ class Game extends React.Component
 
   render()
   {
+    console.log('asdasda', this.props.history);
     const {history} = this.state;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(this.state.currentClick, current.squares);
@@ -126,10 +129,29 @@ class Game extends React.Component
     );
   }
 }
+//----------------------------------------------------
+
+const mapStateToProps = (state) => {
+  return {
+    history: state.history,
+    stepNumber: state.stepNumber,
+    xIsNext: state.xIsNext,
+    currentClick: state.current,
+    isDescending: state.isDescending
+  }
+};
+
+const mapDispatchToProps = (dispatch, props) => {
+  return {
+    onClick: (square) => {
+      dispatch(actionTypes.move());
+    }
+  }
+}
 
 //----------------------------------------------------
 
-export default Game;
+export default connect(mapStateToProps, mapDispatchToProps)(Game);
 
 //----------------------------------------------------
 
