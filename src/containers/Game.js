@@ -6,67 +6,21 @@ import './Game.css';
 import Board from '../components/Board';
 import * as actionTypes from '../actions/actions';
 
-const boardSize = 20; // Board.js also contain this parameter
+const boardSize = 20;
 
 // -------------GAME-------------
 class Game extends React.Component
 {
-  constructor(props) {
-    super(props);
-    this.state = {
-      history: [{
-        squares: Array(boardSize * boardSize).fill(null),
-        pastCol: null,
-        pastRow: null,
-      }],
-      stepNumber: 0,
-      xIsNext: true,
-      currentClick: null,
-      isDescending: true,
-    }
-  }
-
-  handleClick(i) {
-    const history = this.state.history.slice(0, this.state.stepNumber + 1);
-    const current = history[history.length - 1];
-
-    const squares = current.squares.slice();
-    if (calculateWinner(this.state.currentClick, squares) || squares[i]) {
-      return;
-    }
-
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
-    this.setState(prevState => ({
-      history: history.concat([{
-        squares,
-        pastCol: (i % 20) + 1,
-        pastRow: Math.floor(i / 20) + 1,
-      }]),
-      stepNumber: history.length,
-      xIsNext: !prevState.xIsNext,
-      currentClick: i,
-    }));
-  }
 
   jumpTo(step) {
-    this.setState({
-      stepNumber: step,
-      xIsNext: (step % 2) === 0,
-    });
-  }
-
-  sortHistory() {
-    this.setState(prevState => ({
-      isDescending: !prevState.isDescending
-    }));
+    this.props.onHistory(step);
   }
 
   render()
   {
-    console.log('asdasda', this.props.history);
-    const {history} = this.state;
-    const current = history[this.state.stepNumber];
-    const winner = calculateWinner(this.state.currentClick, current.squares);
+    const {history} = this.props;
+    const current = history[this.props.stepNumber];
+    const winner = calculateWinner(this.props.currentClick, current.squares);
 
     const moves = history.map((step, move) => {
       const desc = move ?
@@ -76,16 +30,19 @@ class Game extends React.Component
           <li key={move.id}>
             <button
               type="button"
-              onClick={() => this.jumpTo(move)}>{move === this.state.stepNumber ? <b>{desc}</b> : desc}</button>
+              onClick={() => this.jumpTo(move)}>
+              {move === this.props.stepNumber ? <b>{desc}</b> : desc}
+            </button>
           </li>
         )
     });
 
+    console.log(winner);
     let status;
     if (winner) {
-      status = `Winner: ${  winner.player}`;
+      status = `Winner: ${ winner.player }`;
     } else {
-      status = `Next player: ${  this.state.xIsNext ? 'X' : 'O'}`;
+      status = `Next player: ${  this.props.xIsNext ? 'X' : 'O'}`;
     }
 
     return (
@@ -108,19 +65,18 @@ class Game extends React.Component
           <table>
             <td >
             <Board
-              winningSquares={winner ? winner.line : []}
               squares={current.squares}
-              onClick={(i) => this.handleClick(i)}
+              onClick={(i) => this.props.onMove(i)}
             />
             </td>
             <button
               type="button"
-              onClick={() => this.sortHistory()}>
-              Sort by: {this.state.isDescending ? "Descending" : "Ascending"}
+              onClick={() => this.props.onSort()}>
+              Sort by: {this.props.isDescending ? "Descending" : "Ascending"}
             </button>
             <td>
             Scrolling menu:
-              <div className="vertical-menu">{this.state.isDescending ? moves : moves.reverse()}</div>
+              <div className="vertical-menu">{this.props.isDescending ? moves : moves.reverse()}</div>
             </td>
           </table>
         </body>
@@ -131,20 +87,26 @@ class Game extends React.Component
 }
 //----------------------------------------------------
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     history: state.history,
     stepNumber: state.stepNumber,
     xIsNext: state.xIsNext,
-    currentClick: state.current,
+    currentClick: state.currentClick,
     isDescending: state.isDescending
   }
 };
 
-const mapDispatchToProps = (dispatch, props) => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    onClick: (square) => {
-      dispatch(actionTypes.move());
+    onMove: (pos) => {
+      dispatch(actionTypes.move(pos));
+    },
+    onSort: () => {
+      dispatch(actionTypes.sort());
+    },
+    onHistory: (step) => {
+      dispatch(actionTypes.history(step));
     }
   }
 }
@@ -156,7 +118,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(Game);
 //----------------------------------------------------
 
 // Caculate who is the winner
-function calculateWinner(currentSquare, squares)
+export function calculateWinner(currentSquare, squares)
 {
   if (horizontalLine(currentSquare, squares))
   {

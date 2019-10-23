@@ -1,4 +1,5 @@
 import * as actionTypes from '../actions/actions'
+import { calculateWinner } from '../containers/Game'
 
 const boardSize = 20;
 
@@ -6,7 +7,7 @@ const initState = {
   history: [{
     squares: Array(boardSize * boardSize).fill(null),
     pastCol: null,
-    pastRow: null,
+    pastRow: null
   }],
   stepNumber: 0,
   xIsNext: true,
@@ -14,165 +15,54 @@ const initState = {
   isDescending: true,
 }
 
-const rootReducer = (state = initState, action) => {
+  const rootReducer = (state = initState, action) => {
 
   switch (action.type) {
     case actionTypes.MOVE:
-    
-      break;
-    case actionTypes.RESTART:
+      {
+        const history = state.history.slice(0, state.stepNumber + 1);
+        const current = history[history.length - 1];
 
-      break;
+        const squares = current.squares.slice();
+
+        if (calculateWinner(state.currentClick, squares) || squares[action.pos]) {
+          return state;
+        }
+
+        squares[action.pos] = state.xIsNext ? 'X' : 'O';
+
+        return {
+          ...state,
+          history: history.concat([{
+            squares,
+            pastCol: (action.pos % 20) + 1,
+            pastRow: Math.floor(action.pos / 20) + 1,
+          }]),
+          stepNumber: history.length,
+          xIsNext: !state.xIsNext,
+          currentClick: action.pos
+        };
+      }
     case actionTypes.HISTORY:
-
-      break;
+      {
+        return {
+          ...state,
+          stepNumber: action.step,
+          xIsNext: (action.step % 2) === 0
+        };
+      }
     case actionTypes.SORT:
-
-      break;
+      {
+        return {
+          ...state,
+          isDescending: !state.isDescending
+        };
+      }
     default:
       return state;
   }
-  return state;
 }
 
 //----------------------------------------------------
 
 export default rootReducer;
-
-//----------------------------------------------------
-
-// Caculate who is the winner
-function calculateWinner(currentSquare, squares)
-{
-  if (horizontalLine(currentSquare, squares))
-  {
-    return horizontalLine(currentSquare, squares);
-  }
-  if (verticalLine(currentSquare, squares))
-  {
-    return verticalLine(currentSquare, squares);
-  }
-  if (slashLine(currentSquare, squares))
-  {
-    return slashLine(currentSquare, squares);
-  }
-  if (backSlashLine(currentSquare, squares))
-  {
-    return backSlashLine(currentSquare, squares);
-  }
-  return false;
-}
-
-// Horizontal line (left + right)
-function horizontalLine(currentSquare, squares)
-{
-  const lines = [
-    [squares[currentSquare], squares[currentSquare + 1],
-      squares[currentSquare + 2], squares[currentSquare + 3],
-      squares[currentSquare + 4], squares[currentSquare + 5], squares[currentSquare - 1]],
-    [squares[currentSquare], squares[currentSquare - 1],
-      squares[currentSquare - 2], squares[currentSquare - 3],
-      squares[currentSquare - 4], squares[currentSquare - 5], squares[currentSquare + 1]]
-  ]
-
-  for (let i = 0; i < lines.length; i++)
-  {
-    const [a, b, c, d, e, f, g] = lines[i];
-    if (a
-      && a === b
-      && a === c
-      && a === d
-      && a === e
-      && ((a === f || f === null) || (a === g || g === null)))
-      {
-        return {player: a, line: [a, b, c, d, e]};
-      }
-  }
-  return false;
-}
-
-// Vertical line (up + down)
-function verticalLine(currentSquare, squares)
-{
-  const lines = [
-    [squares[currentSquare], squares[currentSquare + boardSize],
-      squares[currentSquare + boardSize * 2], squares[currentSquare + boardSize * 3],
-      squares[currentSquare + boardSize * 4], squares[currentSquare + boardSize * 5], squares[currentSquare - boardSize]],
-    [squares[currentSquare], squares[currentSquare - boardSize],
-      squares[currentSquare - boardSize * 2], squares[currentSquare - boardSize * 3],
-      squares[currentSquare - boardSize * 4], squares[currentSquare - boardSize * 5], squares[currentSquare + boardSize]]
-  ]
-
-  for (let i = 0; i < lines.length; i++)
-  {
-    const [a, b, c, d, e, f, g] = lines[i];
-    if (a
-      && a === b
-      && a === c
-      && a === d
-      && a === e
-      && ((a === f || f === null) || (a === g || g === null)))
-      {
-        return {player: a, line: [a, b, c, d, e]};
-      }
-  }
-  return false;
-}
-
-// Slash line
-function slashLine(currentSquare, squares)
-{
-  const lines = [
-    [squares[currentSquare], squares[currentSquare + boardSize + 1],
-      squares[currentSquare + (boardSize * 2) + 2], squares[currentSquare + (boardSize * 3) + 3],
-      squares[currentSquare + (boardSize * 4) + 4], squares[currentSquare + (boardSize * 5) + 5], squares[currentSquare - boardSize - 1]],
-    [squares[currentSquare], squares[currentSquare - boardSize - 1],
-      squares[currentSquare - (boardSize * 2) - 2], squares[currentSquare - (boardSize * 3) - 3],
-      squares[currentSquare - (boardSize * 4) - 4], squares[currentSquare - (boardSize * 5) - 5], squares[currentSquare + boardSize + 1]]
-  ]
-
-  for (let i = 0; i < lines.length; i++)
-  {
-    const [a, b, c, d, e, f, g] = lines[i];
-    if (a
-      && a === b
-      && a === c
-      && a === d
-      && a === e
-      && ((a === f || f === null) || (a === g || g === null)))
-      {
-        return {player: a, line: [a, b, c, d, e]};
-      }
-  }
-  return false;
-}
-
-// Backslash line
-function backSlashLine(currentSquare, squares)
-{
-  const lines = [
-    [squares[currentSquare], squares[currentSquare + boardSize - 1],
-      squares[currentSquare + (boardSize * 2) - 2], squares[currentSquare + (boardSize * 3) - 3],
-      squares[currentSquare + (boardSize * 4) - 4], squares[currentSquare + (boardSize * 5) - 5], squares[currentSquare - boardSize + 1],
-      squares[currentSquare - boardSize + 1]],
-    [squares[currentSquare], squares[currentSquare - boardSize + 1],
-      squares[currentSquare - (boardSize * 2) + 2], squares[currentSquare - (boardSize * 3) + 3],
-      squares[currentSquare - (boardSize * 4) + 4], squares[currentSquare - (boardSize * 5) + 5], squares[currentSquare + boardSize - 1],
-      squares[currentSquare + boardSize - 1]]
-  ]
-
-  for (let i = 0; i < lines.length; i++)
-  {
-    const [a, b, c, d, e, f, g] = lines[i];
-    if (a
-      && a === b
-      && a === c
-      && a === d
-      && a === e
-      && ((a === f || f === null) || (a === g || g === null)))
-      {
-        return {player: a, line: [a, b, c, d, e]};
-      }
-  }
-  return false;
-}
