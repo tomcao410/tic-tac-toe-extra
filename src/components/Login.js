@@ -37,7 +37,7 @@ class Login extends React.Component {
 
     render() {
       if (localStorage.getItem('user') !== null) {
-          window.location.replace('/');
+          window.location.replace('/game');
       }
         const { loggingIn } = this.props;
         const { email, password, submitted } = this.state;

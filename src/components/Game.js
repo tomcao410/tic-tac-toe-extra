@@ -22,6 +22,12 @@ class Game extends React.Component
 
   render()
   {
+    if (localStorage.getItem('user') === null) {
+      if (window.confirm("You need to login first!"))
+      {
+        window.location.replace('/user/login');
+      }
+    }
     const {history} = this.props;
     const current = history[this.props.stepNumber];
     const winner = calculateWinner(this.props.currentClick, current.squares);

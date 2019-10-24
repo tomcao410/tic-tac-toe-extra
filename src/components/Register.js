@@ -37,10 +37,11 @@ class Register extends React.Component {
 
         this.setState({ submitted: true });
         const { user } = this.state;
+
         if (user.email && user.password && user.confirmPassword) {
             if (user.password === user.confirmPassword) {
-                this.props.register(user);
-                window.location.replace('/game');
+                this.props.register(user.email, user.password);
+                window.location.replace('/user/login');
             }
         }
     }
@@ -78,10 +79,15 @@ class Register extends React.Component {
                               <font color="red">Confirm password is required</font>
                             </div>
                         }
+                        {submitted && (user.password !== user.confirmPassword) &&
+                            <div className="help-block">
+                              <font color="red">Confirm password does not match!</font>
+                            </div>
+                        }
                     </div>
                     <div className="form-group">
                         <button
-                          type="button"
+                          type="submit"
                           className="btn btn-primary">Register</button>
                         {registering}
                         <Link to="/" className="btn btn-link">Cancel</Link>
