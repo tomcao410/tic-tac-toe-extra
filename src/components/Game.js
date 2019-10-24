@@ -6,7 +6,7 @@ import logo from '../logo.svg';
 import '../App.css';
 import Board from './Board';
 import * as actionTypes from '../actions/gameActions';
-
+import { userActions } from '../actions/userActions';
 
 
 
@@ -26,6 +26,7 @@ class Game extends React.Component
       if (window.confirm("You need to login first!"))
       {
         window.location.replace('/user/login');
+        return;
       }
     }
     const {history} = this.props;
@@ -40,6 +41,7 @@ class Game extends React.Component
           <li key={move.id}>
             <button
               type="button"
+              className="custom-history-button"
               onClick={() => this.jumpTo(move)}>
               {move === this.props.stepNumber ? <b>{desc}</b> : desc}
             </button>
@@ -80,6 +82,8 @@ class Game extends React.Component
             </td>
             <button
               type="button"
+              className="custom-sort-button"
+
               onClick={() => this.props.onSort()}>
               Sort by: {this.props.isDescending ? "Descending" : "Ascending"}
             </button>
@@ -88,6 +92,12 @@ class Game extends React.Component
             Scrolling menu:
               <div className="vertical-menu">{this.props.isDescending ? moves : moves.reverse()}</div>
             </td>
+            <button
+              type="button"
+              className="custom-logout-button"
+              onClick={() => this.props.logout()}>
+              Logout
+            </button>
           </table>
         </body>
 
@@ -117,7 +127,8 @@ const mapDispatchToProps = (dispatch) => {
     },
     onHistory: (step) => {
       dispatch(actionTypes.history(step));
-    }
+    },
+    logout: userActions.logout
   }
 }
 

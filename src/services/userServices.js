@@ -30,6 +30,7 @@ function login(email, password) {
 function logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('user');
+    window.location.replace('/user/login');
 }
 
 
@@ -50,7 +51,7 @@ function handleResponse(response) {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
         if (!response.ok) {
-          alert("Action failed!");
+          alert("Login failed! Please check if your email or password is invalid");
             if (response.status === 401) {
                 // auto logout if 401 response returned from api
                 logout();

@@ -9,6 +9,45 @@
 
 }
 
+.custom-history-button
+{
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 3px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 8px;
+  font-weight: normal;
+  border-radius: 12px;
+}
+
+.custom-logout-button
+{
+  background-color: #f44336; /* Green */
+  border: none;
+  color: white;
+  padding: 3px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 12px;
+}
+
+.custom-sort-button
+{
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 3px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 12px;
+}
 
 .board{
   display: flex;
