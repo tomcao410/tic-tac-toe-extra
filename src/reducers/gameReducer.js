@@ -1,5 +1,5 @@
-import * as actionTypes from '../actions/actions'
-import { calculateWinner } from '../containers/Game'
+import * as actionTypes from '../actions/gameActions'
+import { calculateWinner } from '../components/Game'
 
 const boardSize = 20;
 

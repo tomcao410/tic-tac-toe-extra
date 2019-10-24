@@ -1,10 +1,14 @@
 import React from 'react';
+
 import { connect } from 'react-redux';
 
 import logo from '../logo.svg';
-import './Game.css';
-import Board from '../components/Board';
-import * as actionTypes from '../actions/actions';
+import '../App.css';
+import Board from './Board';
+import * as actionTypes from '../actions/gameActions';
+
+
+
 
 const boardSize = 20;
 
@@ -37,7 +41,6 @@ class Game extends React.Component
         )
     });
 
-    console.log(winner);
     let status;
     if (winner) {
       status = `Winner: ${ winner.player }`;
@@ -74,6 +77,7 @@ class Game extends React.Component
               onClick={() => this.props.onSort()}>
               Sort by: {this.props.isDescending ? "Descending" : "Ascending"}
             </button>
+
             <td>
             Scrolling menu:
               <div className="vertical-menu">{this.props.isDescending ? moves : moves.reverse()}</div>

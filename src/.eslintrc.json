@@ -16,6 +16,7 @@
     "prefer-const": 0,
     "vars-on-top": 0,
     "no-use-before-define": 0,
+    "import/prefer-default-export": 0,
     "import/imports-first": ["error", "absolute-first"],
     "import/newline-after-import": "error",
     "react/destructuring-assignment": 0
