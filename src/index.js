@@ -39,12 +39,11 @@ ReactDOM.render(
     <Router>
       <Switch>
         <Route path="/" exact component={Login} />
-        <Route path="/user/login" exact component={Login} />
         <Route path="/user/register" exact component={Register} />
         <Provider store={gameStore}>
           <Route path="/game" exact component={Game} />
         </Provider>
-        <Redirect to="/user/login" />
+        <Redirect to="/" />
       </Switch>
     </Router>
   </Provider>,
