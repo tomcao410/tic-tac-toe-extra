@@ -8,12 +8,12 @@ export const userService = {
     register
 };
 
-function login(email, password) {
+function login(userName, password) {
     const requestOptions = {
         method: 'POST',
         mode: 'cors',
         headers: { 'Content-Type': 'application/json'},
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ userName, password })
     };
 
     return fetch(`${apiUrl}/user/login`, requestOptions)
@@ -21,7 +21,7 @@ function login(email, password) {
         .then(user => {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem('user', JSON.stringify(user));
-            console.log(user);
+
 
             return user;
         });
@@ -34,13 +34,12 @@ function logout() {
 }
 
 
-function register(email, password) {
-  console.log(email, password)
+function register(userName, password) {
     const requestOptions = {
         method: 'POST',
         mode: 'cors',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({email, password})
+        body: JSON.stringify({userName, password})
     };
 
     return fetch(`${apiUrl}/user/register`, requestOptions).then(handleResponse);
@@ -51,11 +50,9 @@ function handleResponse(response) {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
         if (!response.ok) {
-          alert("Login failed! Please check if your email or password is invalid");
             if (response.status === 401) {
                 // auto logout if 401 response returned from api
-                logout();
-                window.location.reload(true);
+                localStorage.removeItem('user');
             }
 
             const error = (data && data.message) || response.statusText;

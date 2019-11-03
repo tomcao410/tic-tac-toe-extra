@@ -10,7 +10,7 @@ class Register extends React.Component {
 
         this.state = {
             user: {
-                email: '',
+                userName: '',
                 password: '',
                 confirmPassword: ''
             },
@@ -22,6 +22,8 @@ class Register extends React.Component {
     }
 
     handleChange(event) {
+        this.setState({ submitted: false });
+
         const { name, value } = event.target;
         const { user } = this.state;
         this.setState({
@@ -37,70 +39,92 @@ class Register extends React.Component {
 
         this.setState({ submitted: true });
         const { user } = this.state;
-
-        if (user.email && user.password && user.confirmPassword) {
+        if (user.userName && user.password && user.confirmPassword) {
             if (user.password === user.confirmPassword) {
-                this.props.register(user.email, user.password);
-                window.location.replace('/user/login');
+                this.props.register(user.userName, user.password);
+                // window.location.replace('/');
             }
         }
     }
 
     render() {
-        const { registering  } = this.props;
+        const { registerFailed, error  } = this.props;
         const { user, submitted } = this.state;
         return (
-            <div className="col-md-6 col-md-offset-3">
-                <h2>Register</h2>
-                <form name="form" onSubmit={this.handleSubmit}>
-                    <div className={`form-group${  submitted && !user.email ? ' has-error' : ''}`}>
-                        <label htmlFor="email">Email</label>
-                        <input type="text" className="form-control" name="email" value={user.email} onChange={this.handleChange} />
-                        {submitted && !user.email &&
-                          <div className="help-block">
-                            <font color="red">Email is required</font>
-                          </div>
-                        }
+
+
+            <div className="limiter">
+        		<div className="container-login100">
+        			<div className="wrap-login100 p-l-50 p-r-50 p-t-77 p-b-30">
+        				<form className="login100-form validate-form" name="form" onSubmit={this.handleSubmit}>
+        					<span className="login100-form-title p-b-55">
+        						Sign Up
+        					</span>
+
+        					<div className="wrap-input100 validate-input m-b-16" data-validate = "Valid userName is required: ex@abc.xyz">
+        						<input className="input100" type="text" name="userName" placeholder="Username" value={user.userName} onChange={this.handleChange} />
+        						<span className="focus-input100" />
+        						<span className="symbol-input100">
+        							<span className="lnr lnr-user" />
+        						</span>
+        					</div>
+                  {submitted && (!user.userName || registerFailed) &&
+                    <div className="help-block">
+                    <font color="#c80000">{ (registerFailed && user.userName) ? error : "Username is required"}</font>
                     </div>
-                    <div className={`form-group${  submitted && !user.password ? ' has-error' : ''}`}>
-                        <label htmlFor="password">Password</label>
-                        <input type="password" className="form-control" name="password" value={user.password} onChange={this.handleChange} />
-                        {submitted && !user.password &&
-                          <div className="help-block">
-                            <font color="red">Password is required</font>
-                          </div>
-                        }
+                  }
+
+        					<div className="wrap-input100 validate-input m-b-16" data-validate = "Password is required">
+        						<input className="input100" type="password" name="password" placeholder="Password" value={user.password} onChange={this.handleChange} />
+        						<span className="focus-input100" />
+        						<span className="symbol-input100">
+        							<span className="lnr lnr-lock" />
+        						</span>
+        					</div>
+                  {submitted && !user.password &&
+                    <div className="help-block">
+                    <font color="#c80000">Password is required</font>
                     </div>
-                    <div className={`form-group${  submitted && !user.confirmPassword ? ' has-error' : ''}`}>
-                        <label htmlFor="confirmPassword">Confirm password</label>
-                        <input type="password" className="form-control" name="confirmPassword" value={user.confirmPassword} onChange={this.handleChange} />
-                        {submitted && !user.confirmPassword &&
-                            <div className="help-block">
-                              <font color="red">Confirm password is required</font>
-                            </div>
-                        }
-                        {submitted && (user.password !== user.confirmPassword) &&
-                            <div className="help-block">
-                              <font color="red">Confirm password does not match!</font>
-                            </div>
-                        }
-                    </div>
-                    <div className="form-group">
-                        <button
-                          type="submit"
-                          className="btn btn-primary">Register</button>
-                        {registering}
-                        <Link to="/" className="btn btn-link">Cancel</Link>
-                    </div>
-                </form>
-            </div>
+                  }
+
+                  <div className="wrap-input100 validate-input m-b-16" data-validate = "Password is required">
+        						<input className="input100" type="password" name="confirmPassword" placeholder="Confirm password" value={user.confirmPassword} onChange={this.handleChange} />
+        						<span className="focus-input100" />
+        						<span className="symbol-input100">
+        							<span className="lnr lnr-lock" />
+        						</span>
+        					</div>
+                  {submitted && (user.password !== user.confirmPassword) &&
+                      <div className="help-block">
+                        <font color="#c80000">Confirm password does not match!</font>
+                      </div>
+                  }
+
+        					<div className="container-login100-form-btn p-t-25">
+        						<button type="submit" className="login100-form-btn">
+        							Register
+        						</button>
+        					</div>
+
+
+
+        					<div className="text-center w-full p-t-115">
+        						<span className="txt1">
+        							Already have an account?&nbsp;
+        						</span>
+                    <Link to="/" className="txt1 bo1 hov1">Login now</Link>
+        					</div>
+        				</form>
+        			</div>
+        		</div>
+        	</div>
         );
     }
 }
 
 function mapState(state) {
-    const { registering } = state.registration;
-    return { registering };
+    const { registerFailed, error } = state.registration;
+    return { registerFailed, error };
 }
 
 const actionCreators = {

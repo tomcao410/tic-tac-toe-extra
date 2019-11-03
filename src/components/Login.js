@@ -8,7 +8,7 @@ class Login extends React.Component {
         super(props);
 
         this.state = {
-            email: '',
+            userName: '',
             password: '',
             submitted: false
         };
@@ -18,6 +18,7 @@ class Login extends React.Component {
     }
 
     handleChange(e) {
+      this.setState({ submitted: false });
         const { name, value } = e.target;
         this.setState({ [name]: value });
     }
@@ -25,19 +26,21 @@ class Login extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
 
+
         this.setState({ submitted: true });
-        const { email, password } = this.state;
-        if (email && password) {
-            this.props.login(email, password);
+        const { userName, password } = this.state;
+        if (userName && password) {
+            this.props.login(userName, password);
         }
     }
 
     render() {
       if (localStorage.getItem('user') !== null) {
-          window.location.replace('/game');
+           window.location.replace('/game');
       }
-        const { loggingIn } = this.props;
-        const { email, password, submitted } = this.state;
+
+        const { loggedIn } = this.props;
+        const { userName, password, submitted } = this.state
         return (
 
 
@@ -49,13 +52,21 @@ class Login extends React.Component {
         						Login
         					</span>
 
-        					<div className="wrap-input100 validate-input m-b-16" data-validate = "Valid email is required: ex@abc.xyz">
-        						<input className="input100" type="text" name="email" placeholder="Username" value={email} onChange={this.handleChange} />
-        						<span className="focus-input100" />
+        					<div
+                    className={`wrap-input100 validate-input m-b-16${  submitted && !userName ? ' has-error' : ''}`}
+                    data-validate = "Valid userName is required: ex@abc.xyz">
+        						<input className="input100" type="text" name="userName" placeholder="Username" value={userName} onChange={this.handleChange} />
+                    <span className="focus-input100" />
         						<span className="symbol-input100">
         							<span className="lnr lnr-user" />
         						</span>
         					</div>
+                  {submitted && !userName &&
+                    <div className="help-block">
+                      <font color="#c80000" >Username is required</font>
+                      <div>&nbsp;</div>
+                    </div>
+                  }
 
         					<div className="wrap-input100 validate-input m-b-16" data-validate = "Password is required">
         						<input className="input100" type="password" name="password" placeholder="Password" value={password} onChange={this.handleChange} />
@@ -64,12 +75,22 @@ class Login extends React.Component {
         							<span className="lnr lnr-lock" />
         						</span>
         					</div>
+                  {submitted && !password &&
+                    <div className="help-block">
+                      <font color="#c80000" >Password is required</font>
+                    </div>
+                  }
 
+                  {submitted && !loggedIn && userName && password &&
+                    <div className="help-block">
+                      <font color="#c80000" >Your information is invalid. Please check again!</font>
+                    </div>
+                  }
         					<div className="container-login100-form-btn p-t-25">
         						<button type="submit" className="login100-form-btn">
         							Login
         						</button>
-                    {loggingIn}
+
         					</div>
 
         					<div className="text-center w-full p-t-42 p-b-22">
@@ -103,8 +124,8 @@ class Login extends React.Component {
 }
 
 function mapState(state) {
-    const { loggingIn } = state.authentication;
-    return { loggingIn };
+    const { loggedIn } = state.authentication;
+    return { loggedIn };
 }
 
 const actionCreators = {

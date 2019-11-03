@@ -9,11 +9,11 @@ export const userActions = {
     getAll
 };
 
-function login(email, password) {
+function login(userName, password) {
     return dispatch => {
-        dispatch(request({ email }));
+        dispatch(request({ userName }));
 
-        userService.login(email, password)
+        userService.login(userName, password)
             .then(
                 user => {
                     dispatch(success(user));
@@ -35,14 +35,14 @@ function logout() {
     return { type: userConstants.LOGOUT };
 }
 
-function register(email, password) {
+function register(userName, password) {
     return dispatch => {
-        dispatch(request(email, password));
+        dispatch(request(userName, password));
 
-        userService.register(email, password)
+        userService.register(userName, password)
             .then(
                 user => {
-                    dispatch(success());
+                    dispatch(success(user));
                     dispatch(alertActions.success('Registration successful'));
                 },
                 error => {

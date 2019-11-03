@@ -25,7 +25,7 @@ class Game extends React.Component
     if (localStorage.getItem('user') === null) {
       if (window.confirm("You need to login first!"))
       {
-        window.location.replace('/user/login');
+        window.location.replace('/user');
         return;
       }
     }

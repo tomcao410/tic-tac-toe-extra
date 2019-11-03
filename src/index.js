@@ -13,6 +13,7 @@ import {
 
 import { Login } from './components/Login';
 import { Register } from './components/Register';
+
 import { authentication } from './reducers/authenticationReducer';
 import { registration } from './reducers/registrationReducer';
 import { alert } from './reducers/alertReducer';
