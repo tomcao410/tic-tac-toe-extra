@@ -74,6 +74,7 @@ function handleResponse(response) {
                 localStorage.removeItem('user');
             }
 
+
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
         }
