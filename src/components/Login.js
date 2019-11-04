@@ -99,7 +99,7 @@ class Login extends React.Component {
         						</span>
         					</div>
 
-        					<a href="#" className="btn-face m-b-10">
+        					<a href="/auth/facebook" className="btn-face m-b-10">
         						<i className="fa fa-facebook-official" />
         						Facebook
         					</a>

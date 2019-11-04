@@ -3,13 +3,12 @@ import { userConstants } from '../constants/users';
 export function registration(state = {}, action) {
   switch (action.type) {
     case userConstants.REGISTER_REQUEST:
-      return { registering: true };
+      return { registered: false };
     case userConstants.REGISTER_SUCCESS:
-      return {};
+      return { registered: true };
     case userConstants.REGISTER_FAILURE:
-
       return {
-        registerFailed: true,
+        registered: false,
         error: action.error === "Conflict" ? "Username is already exists" : action.error
       };
     default:

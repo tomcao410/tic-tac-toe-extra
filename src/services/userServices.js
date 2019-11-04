@@ -1,11 +1,12 @@
 
 
-const apiUrl = 'http://localhost:3001'
+const apiUrl = 'https://tic-tac-toe-extra.herokuapp.com'
 
 export const userService = {
     login,
     logout,
-    register
+    register,
+    facebookLogin
 };
 
 function login(userName, password) {
@@ -17,6 +18,24 @@ function login(userName, password) {
     };
 
     return fetch(`${apiUrl}/user/login`, requestOptions)
+        .then(handleResponse)
+        .then(user => {
+            // store user details and jwt token in local storage to keep user logged in between page refreshes
+            localStorage.setItem('user', JSON.stringify(user));
+
+
+            return user;
+        });
+}
+
+function facebookLogin() {
+    const requestOptions = {
+        method: 'GET',
+        mode: 'cors',
+        headers: { 'Content-Type': 'application/json'}
+    };
+
+    return fetch(`${apiUrl}/auth/facebook`, requestOptions)
         .then(handleResponse)
         .then(user => {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
