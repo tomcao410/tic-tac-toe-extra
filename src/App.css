@@ -33,6 +33,11 @@
     padding-right: 30px;
 }
 
+.custom-table {
+  margin-top: 1%;
+  width: 95%
+}
+
 .custom-history-button
 {
   background-color: #4CAF50; /* Green */
@@ -49,7 +54,7 @@
 
 .custom-logout-button
 {
-  background-color: #f44336; /* Green */
+  background-color: #f44336;
   border: none;
   color: white;
   padding: 3px 20px;
@@ -58,6 +63,33 @@
   display: inline-block;
   font-size: 16px;
   border-radius: 12px;
+}
+
+.custom-profile-button
+{
+
+  color: #fff;
+  background-color: #5bc0de;
+  border-color: #46b8da;
+  border: none;
+  color: white;
+  padding: 3px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 12px;
+}
+
+.custom-profile-image
+{
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 4px solid #3498db; /* Blue */
+  border-radius: 50%;
+  margin: auto;
+  width: 150px;
+  height: 150px;
+  margin-bottom: 10%;
 }
 
 .btn-primary
@@ -151,7 +183,8 @@
 
 .line{
   border-top: 3px solid white;
-  margin-top: auto;
+  margin-top: 1%;
+  width: 100%;
 }
 
 .App-body {

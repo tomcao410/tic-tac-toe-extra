@@ -19,6 +19,8 @@ import { registration } from './reducers/registrationReducer';
 import { alert } from './reducers/alertReducer';
 import './index.css';
 import Game from './components/Game';
+import Profile from "./components/Profile";
+import Error from "./components/Error";
 import gameReducer from './reducers/gameReducer'
 import * as serviceWorker from './serviceWorker';
 
@@ -41,10 +43,11 @@ ReactDOM.render(
       <Switch>
         <Route path="/" exact component={Login} />
         <Route path="/user/register" exact component={Register} />
+        <Route path="/profile" exact component={Profile} />
         <Provider store={gameStore}>
-          <Route path="/game" exact component={({location}) => <Game location={location}/>} />
+          <Route path="/game" exact component={Game} />
         </Provider>
-        <Redirect to="/" />
+        <Redirect to="/error" />
       </Switch>
     </Router>
   </Provider>,

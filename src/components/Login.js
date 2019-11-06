@@ -101,7 +101,7 @@ class Login extends React.Component {
 
         					</div>
 
-        					<div className="text-center w-full p-t-42 p-b-22">
+        					{/* <div className="text-center w-full p-t-42 p-b-22">
         						<span className="txt1">
         							Or login with
         						</span>
@@ -115,7 +115,7 @@ class Login extends React.Component {
         					<a href="/auth/google" className="btn-google m-b-10">
         						<img src="images/icons/icon-google.png" alt="GOOGLE" />
         						Google
-        					</a>
+        					</a> */}
 
         					<div className="text-center w-full p-t-115">
         						<span className="txt1">

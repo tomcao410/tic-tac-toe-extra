@@ -14,7 +14,8 @@ class Register extends React.Component {
                 password: '',
                 confirmPassword: ''
             },
-            submitted: false
+            submitted: false,
+            isValid: true
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -37,21 +38,32 @@ class Register extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
 
-        this.setState({ submitted: true });
         const { user } = this.state;
-        if (user.userName && user.password && user.confirmPassword) {
-            if (user.password === user.confirmPassword) {
-                this.props.register(user.userName, user.password);
-            }
+        const validUserName = user.userName.match(/[^\w\\` !@#$%^&*()+={}:;'"<>,.?_.-]/);
+        console.log(validUserName);
+
+        if (validUserName)
+        {
+          this.setState({ submitted: true, isValid: true });
+
+          if (user.userName && user.password && user.confirmPassword) {
+            console.log(user.password);
+              if (user.password === user.confirmPassword) {
+                  this.props.register(user.userName, user.password);
+              }
+          }
+        }
+        else {
+          this.setState({ submitted: true, isValid: false });
         }
     }
 
     render() {
-        const { registered, error  } = this.props;
-        const { user, submitted } = this.state;
-        console.log(this.state);
+        const { registerSuccess, registerFailed, error  } = this.props;
+        const { user, submitted, isValid } = this.state;
+
         // Register succeed
-        if (registered && submitted && user.userName)
+        if (registerSuccess && submitted && user.userName)
         {
           return (
             <div className="limiter">
@@ -89,9 +101,15 @@ class Register extends React.Component {
                       <span className="lnr lnr-user" />
                     </span>
                   </div>
-                  {submitted && (!user.userName || !registered) &&
+                  {submitted && (!user.userName || registerFailed) &&
                     <div className="help-block">
-                    <font color="#c80000">{ (!registered && user.userName) ? error : "Username is required"}</font>
+                    <font color="#c80000">{ (registerFailed && user.userName) ? error : "Username is required"}</font>
+                    </div>
+                  }
+
+                  {submitted && !isValid && user.userName &&
+                    <div className="help-block">
+                    <font color="#c80000">Username is invalid</font>
                     </div>
                   }
 
@@ -115,10 +133,20 @@ class Register extends React.Component {
                       <span className="lnr lnr-lock" />
                     </span>
                   </div>
-                  {submitted && (user.password !== user.confirmPassword) &&
+                  {submitted && (user.password !== user.confirmPassword) && user.confirmPassword &&
                       <div className="help-block">
                         <font color="#c80000">Confirm password does not match!</font>
                       </div>
+                  }
+                  {submitted && !user.confirmPassword &&
+                    <div className="help-block">
+                    <font color="#c80000">Confirm password is required</font>
+                    </div>
+                  }
+
+                  {submitted && !registerSuccess && !registerFailed && user.userName && (user.password === user.confirmPassword) &&
+                    user.password && user.confirmPassword &&
+                    <div className="loader"/>
                   }
 
                   <div className="container-login100-form-btn p-t-25">
@@ -142,8 +170,8 @@ class Register extends React.Component {
 }
 
 function mapState(state) {
-    const { registered, error } = state.registration;
-    return { registered, error };
+    const { registerSuccess, registerFailed, error } = state.registration;
+    return { registerSuccess, registerFailed, error };
 }
 
 const actionCreators = {

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { connect } from 'react-redux';
-
+import { Link } from 'react-router-dom';
 import logo from '../logo.svg';
 import '../App.css';
 import Board from './Board';
@@ -69,22 +69,34 @@ class Game extends React.Component
     if (winner) {
       status = `Winner: ${ winner.player }`;
     } else {
-      status = `Next player: ${  this.props.xIsNext ? 'X' : 'O'}`;
+      // status = `Next player: ${  this.props.xIsNext ? 'X' : 'O'}`;
+      status = "Your tick: X";
     }
 
     return (
       <div className="App">
 
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Welcome to <strong>Tic-Tac-Toe</strong> Vietnamese version!
-          </p>
-          <div className="line">
-            <strong>RULE: </strong>
-            Who hits 5 without being block at the 2 ends first is the WINNER!
-            <div className="line" />
-          </div>
+          <table className="custom-table">
+            <td align="left">
+              <span>Welcome to Tic-Tac-Toe Vietnamese version</span>
+            </td>
+            <td align="right">
+              {/* <a
+                href="/profile"
+                className="custom-profile-button">
+                Profile
+              </a> */}
+              <button
+                type="button"
+                className="custom-logout-button"
+                onClick={() => this.props.logout()}>
+                Logout
+              </button>
+            </td>
+          </table>
+          <div className="line"/>
+          <strong>RULE: Who hits 5 without being block at the 2 ends first is the WINNER!</strong>
         </header>
 
         <body className="App-body">
@@ -111,15 +123,6 @@ class Game extends React.Component
               History menu (scrollable):
                 <div className="vertical-menu">{this.props.isDescending ? moves : moves.reverse()}</div>
               </tr>
-            </td>
-
-            <td className="td-table">
-            <button
-              type="button"
-              className="custom-logout-button"
-              onClick={() => this.props.logout()}>
-              Logout
-            </button>
             </td>
           </table>
         </body>

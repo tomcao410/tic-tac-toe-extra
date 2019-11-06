@@ -5,11 +5,11 @@ export function registration(state = {}, action) {
     case userConstants.REGISTER_REQUEST:
       return { registered: false };
     case userConstants.REGISTER_SUCCESS:
-      return { registered: true };
+      return { registerSuccess: true };
     case userConstants.REGISTER_FAILURE:
       return {
-        registered: false,
-        error: action.error === "Conflict" ? "Username is already exists" : action.error
+        registerFailed: false,
+        error: action.error === "Conflict" ? "Username is already exists" : "Something went wrong with the server!"
       };
     default:
       return state
