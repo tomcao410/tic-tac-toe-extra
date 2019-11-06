@@ -14,8 +14,7 @@ class Register extends React.Component {
                 password: '',
                 confirmPassword: ''
             },
-            submitted: false,
-            isValid: true
+            submitted: false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -38,29 +37,19 @@ class Register extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
 
+        this.setState({ submitted: true});
         const { user } = this.state;
-        const validUserName = user.userName.match(/[^\w\\` !@#$%^&*()+={}:;'"<>,.?_.-]/);
-        console.log(validUserName);
-
-        if (validUserName)
-        {
-          this.setState({ submitted: true, isValid: true });
-
-          if (user.userName && user.password && user.confirmPassword) {
-            console.log(user.password);
-              if (user.password === user.confirmPassword) {
-                  this.props.register(user.userName, user.password);
-              }
-          }
-        }
-        else {
-          this.setState({ submitted: true, isValid: false });
+        
+        if (user.userName && user.password && user.confirmPassword) {
+            if (user.password === user.confirmPassword) {
+                this.props.register(user.userName, user.password);
+            }
         }
     }
 
     render() {
         const { registerSuccess, registerFailed, error  } = this.props;
-        const { user, submitted, isValid } = this.state;
+        const { user, submitted } = this.state;
 
         // Register succeed
         if (registerSuccess && submitted && user.userName)
@@ -107,11 +96,6 @@ class Register extends React.Component {
                     </div>
                   }
 
-                  {submitted && !isValid && user.userName &&
-                    <div className="help-block">
-                    <font color="#c80000">Username is invalid</font>
-                    </div>
-                  }
 
                   <div className="wrap-input100 validate-input m-b-16" data-validate = "Password is required">
                     <input className="input100" type="password" name="password" placeholder="Password" value={user.password} onChange={this.handleChange} />
