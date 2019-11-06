@@ -16,6 +16,22 @@ const boardSize = 20;
 class Game extends React.Component
 {
 
+  componentWillUpdate(bot) {
+    if (!bot.xIsNext)
+    {
+      var min = 0;
+      var max = boardSize * boardSize - 1;
+      var rand = Math.floor(Math.random() * (max - min + 1)) + min;
+      const {history} = bot;
+      const current = history[bot.stepNumber];
+      while (current.squares[rand] !== null)
+      {
+        rand = Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      this.props.onMove(rand);
+    }
+  }
+
   jumpTo(step) {
     this.props.onHistory(step);
   }
@@ -35,13 +51,13 @@ class Game extends React.Component
 
     const moves = history.map((step, move) => {
       const desc = move ?
-        `Go to #${  move  }- (col: ${  history[move].pastCol  }, row: ${  history[move].pastRow  })` :
-        'Go to game start';
+        `Move #${  move  }- (col: ${  history[move].pastCol  }, row: ${  history[move].pastRow  })` :
+        'Game start!';
         return (
           <li key={move.id}>
             <button
               type="button"
-              className="custom-history-button"
+              className={`${move % 2 === 0 ? 'custom-history-button' : 'btn-warning'}`}
               onClick={() => this.jumpTo(move)}>
               {move === this.props.stepNumber ? <b>{desc}</b> : desc}
             </button>
@@ -74,30 +90,37 @@ class Game extends React.Component
         <body className="App-body">
           <div>{status}</div>
           <table>
-            <td >
+            <td className="td-table">
             <Board
               squares={current.squares}
               onClick={(i) => this.props.onMove(i)}
             />
             </td>
-            <button
-              type="button"
-              className="custom-sort-button"
 
-              onClick={() => this.props.onSort()}>
-              Sort by: {this.props.isDescending ? "Descending" : "Ascending"}
-            </button>
+            <td className="td-table">
+              {/* <tr>
+                <button
+                  type="button"
+                  className="btn-primary"
 
-            <td>
-            Scrolling menu:
-              <div className="vertical-menu">{this.props.isDescending ? moves : moves.reverse()}</div>
+                  onClick={() => this.props.onSort()}>
+                  Sort history: {this.props.isDescending ? "Descending" : "Ascending"}
+                </button>
+              </tr> */}
+              <tr>
+              History menu (scrollable):
+                <div className="vertical-menu">{this.props.isDescending ? moves : moves.reverse()}</div>
+              </tr>
             </td>
+
+            <td className="td-table">
             <button
               type="button"
               className="custom-logout-button"
               onClick={() => this.props.logout()}>
               Logout
             </button>
+            </td>
           </table>
         </body>
 

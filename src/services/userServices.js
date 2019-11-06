@@ -35,9 +35,10 @@ function facebookLogin() {
         headers: { 'Content-Type': 'application/json'}
     };
 
-    return fetch(`${apiUrl}/auth/facebook`, requestOptions)
+    return fetch('http://localhost:3000/game', requestOptions)
         .then(handleResponse)
         .then(user => {
+
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem('user', JSON.stringify(user));
 
@@ -74,10 +75,11 @@ function handleResponse(response) {
                 localStorage.removeItem('user');
             }
 
-
+            console.log(data);
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
         }
+
 
         return data;
     });

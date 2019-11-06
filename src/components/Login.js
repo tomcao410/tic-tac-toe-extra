@@ -17,6 +17,8 @@ class Login extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+
+
     handleChange(e) {
       this.setState({ submitted: false });
         const { name, value } = e.target;
@@ -34,12 +36,14 @@ class Login extends React.Component {
         }
     }
 
+
+
     render() {
       if (localStorage.getItem('user') !== null) {
            window.location.replace('/game');
       }
 
-        const { loggedIn } = this.props;
+        const { loginSuccess, loginFailed } = this.props;
         const { userName, password, submitted } = this.state
         return (
 
@@ -81,10 +85,14 @@ class Login extends React.Component {
                     </div>
                   }
 
-                  {submitted && !loggedIn && userName && password &&
+                  {submitted && loginFailed && userName && password &&
                     <div className="help-block">
                       <font color="#c80000" >Your information is invalid. Please check again!</font>
                     </div>
+                  }
+
+                  {submitted && !loginSuccess && !loginFailed && userName && password &&
+                    <div className="loader"/>
                   }
         					<div className="container-login100-form-btn p-t-25">
         						<button type="submit" className="login100-form-btn">
@@ -104,7 +112,7 @@ class Login extends React.Component {
         						Facebook
         					</a>
 
-        					<a href="#" className="btn-google m-b-10">
+        					<a href="/auth/google" className="btn-google m-b-10">
         						<img src="images/icons/icon-google.png" alt="GOOGLE" />
         						Google
         					</a>
@@ -124,8 +132,8 @@ class Login extends React.Component {
 }
 
 function mapState(state) {
-    const { loggedIn } = state.authentication;
-    return { loggedIn };
+    const { loginSuccess, loginFailed } = state.authentication;
+    return { loginSuccess, loginFailed };
 }
 
 const actionCreators = {

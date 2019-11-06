@@ -42,7 +42,7 @@ ReactDOM.render(
         <Route path="/" exact component={Login} />
         <Route path="/user/register" exact component={Register} />
         <Provider store={gameStore}>
-          <Route path="/game" exact component={Game} />
+          <Route path="/game" exact component={({location}) => <Game location={location}/>} />
         </Provider>
         <Redirect to="/" />
       </Switch>
